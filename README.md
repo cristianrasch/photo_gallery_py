@@ -15,3 +15,8 @@ dev setup instructions
 3. Run the dev server (listens on localhost:5000)
 
 `FLASK_ENV=development FLASK_APP=photo_gallery flask run`
+
+TODO
+----
+
+1. Deploy with Fabric
