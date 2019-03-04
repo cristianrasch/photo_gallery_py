@@ -45,7 +45,7 @@ class Picture:
 
         pics.sort(key=lambda path: [path.stat().st_mtime, path.name])
 
-        return map(lambda pic: cls(url_for('picture', picture=cls.web_pic_path(pic))), pics)
+        return [cls(url_for('picture', picture=cls.web_pic_path(pic))) for pic in pics]
 
     def __init__(self, path):
         self.path = Path(path)
