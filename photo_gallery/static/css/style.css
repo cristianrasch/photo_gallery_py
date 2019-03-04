@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  background-image: url(/static/img/dust_scratches.png);
+  padding: 20px 0;
+}
+
+.folder {
+  text-align: center;
+  font-size: large;
+}
+
+#gallery {
+  margin: 1.25em 0;
+}

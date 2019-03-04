@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-6 offset-3">
+      <div class="list-group text-center">
+        {% for folder, css_class in folders_and_classes %}
+          <a href="{{ url_for('folder', folder=folder) }}" class="list-group-item list-group-item-action list-group-item-{{ css_class }} folder">
+            {{ folder }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
