@@ -1,0 +1,6 @@
+# include photo_gallery/schema.sql
+# graft photo_gallery/static
+# graft photo_gallery/templates
+recursive-include photo_gallery/static *
+recursive-include photo_gallery/templates *
+global-exclude *.pyc
