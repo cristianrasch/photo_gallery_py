@@ -10,7 +10,7 @@ dev setup instructions
 
 2. Configure your pictures path (defaults to ~/Pictures)
 
-`echo "PICS_DIR = '/path/to/pictures'" > instance/config`
+`mkdir instance && echo "PICS_DIR = '/path/to/pictures'" > instance/config.py`
 
 3. Run the dev server (listens on localhost:5000)
 
