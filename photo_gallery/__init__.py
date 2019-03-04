@@ -1,7 +1,7 @@
 import os
 import itertools
 
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, abort, send_from_directory, request
 
 from .models import Picture
 
@@ -32,7 +32,21 @@ def create_app(test_config=None):
 
     @app.route("/<folder>")
     def folder(folder):
-        return folder
-        # return render_template('show.html', folder=folder)
+        pictures = Picture.from_folder(folder)
+        return_to = request.referrer or url_for('/')
+        return render_template('show.html', pictures=pictures,
+                                            return_to=return_to)
+
+    # /pictures/Berlin_I/web/p1080757_12566647374_o_opt.jpg
+    # /pictures/Berlin_I/thumb/p1080757_12566647374_o_opt.jpg
+    @app.route("/pictures/<path:picture>")
+    def picture(picture):
+        pics_dir = Picture.pics_dir()
+        pic_path = pics_dir / picture
+
+        if pic_path.exists():
+            return send_from_directory(pics_dir, picture)
+        else:
+            abort(404)
 
     return app

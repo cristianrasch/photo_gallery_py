@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <a href="{{ return_to }}" class="btn btn-secondary btn-lg btn-block">
+        <i class="fa fa-long-arrow-alt-left"></i> Back
+      </a>
+    </div>
+  </div>
+
+  <div id="gallery" style="display:none;">
+    {% for picture in pictures %}
+      <a href="#">
+        <img alt=""
+             src="{{ picture.thumb_fname() }}"
+             data-image="{{ picture.path }}"
+             data-description=""
+             style="display:none">
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <a href="{{ return_to }}" class="btn btn-secondary btn-lg btn-block">
+        <i class="fa fa-long-arrow-alt-left"></i> Back
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+
+<% content_for :js do %>
+  {% block js %}
+    <script type="text/javascript">
+      $("#gallery").unitegallery();
+    </script>
+  {% endblock %}
+<% end %>
