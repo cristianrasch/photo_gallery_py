@@ -22,14 +22,14 @@ class Picture:
     def folders(cls):
         return sorted([f.name for f in cls.pics_dir().iterdir() if f.is_dir() and
                                                                    f.name[0].isupper() and
-                                                                   any(ext for ext in cls.photo_exts() if f.glob(f'*.{ext}'))])
+                                                                   any(ext for ext in cls.photo_exts() if (f / cls.WEB_SUBDIR).glob(f'*.{ext}')) and
+                                                                   any(ext for ext in cls.photo_exts() if (f / cls.THUMB_SUBDIR).glob(f'*.{ext}'))])
 
-    # /Berlin_I/p1080757_12566647374_o_opt.jpg =>
+    # ~/Pictures/Personal/Berlin_I/p1080757_12566647374_o_opt.jpg =>
     #   /Berlin_I/web/p1080757_12566647374_o_opt.jpg
     @classmethod
-    def web_pic_path(cls, pic_path):
-        path = Path(str(pic_path).replace(str(cls.pics_dir()), ''))
-        return path.parent / cls.WEB_SUBDIR / path.name
+    def strip_pics_dir(cls, pic_path):
+        return str(pic_path).replace(str(cls.pics_dir()), '')
 
     @classmethod
     @lru_cache(maxsize=1)
@@ -38,13 +38,13 @@ class Picture:
 
         pics = []
         pics_dir = cls.pics_dir()
-        folder_dir = pics_dir / folder
+        folder_dir = pics_dir / folder / cls.WEB_SUBDIR
         for ext in cls.photo_exts():
             pics.extend(folder_dir.glob(f'*.{ext}'))
 
         pics.sort(key=lambda path: [path.stat().st_mtime, path.name])
 
-        return [cls(url_for('picture', picture=cls.web_pic_path(pic))) for pic in pics]
+        return [cls(url_for('picture', picture=cls.strip_pics_dir(pic))) for pic in pics]
 
     def __init__(self, path):
         self.path = Path(path)
