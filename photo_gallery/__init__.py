@@ -1,5 +1,7 @@
-import os
+import logging
+from logging.handlers import TimedRotatingFileHandler
 import itertools
+from pathlib import Path
 
 from flask import Flask, render_template, url_for, abort, send_from_directory, request
 
@@ -15,14 +17,24 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+
+    log_dir = Path(__file__).parent.parent / 'log'
+    log_dir.mkdir(exist_ok=True)
+    fname = log_dir / 'photo_gallery.log'
+    log_handler = TimedRotatingFileHandler(filename=fname, when='d',
+                                          backupCount=7)
+    app.logger.setLevel(logging.ERROR)
+    app.logger.addHandler(log_handler)
 
     if app.config['ENV'] not in ['development', 'test']:
         from flask_basicauth import BasicAuth
         basic_auth = BasicAuth(app)
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        app.logger.error(error, error.__traceback__)
+        return str(error), 500
 
     @app.route("/")
     # @basic_auth.required
