@@ -51,7 +51,7 @@ def create_app(test_config=None):
     # @basic_auth.required
     def folder(folder):
         pictures = Picture.from_folder(folder)
-        return_to = request.referrer or url_for('/')
+        return_to = request.referrer or url_for('index')
         return render_template('show.html', pictures=pictures,
                                             return_to=return_to)
 
