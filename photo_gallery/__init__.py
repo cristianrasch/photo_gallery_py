@@ -37,11 +37,11 @@ def create_app(test_config=None):
         return render_template('show.html', pictures=pictures,
                                             return_to=return_to)
 
-    if app.config['ENV'] == 'development':
-        # /pictures/Berlin_I/web/p1080757_12566647374_o_opt.jpg
-        # /pictures/Berlin_I/thumb/p1080757_12566647374_o_opt.jpg
-        @app.route("/pictures/<path:picture>")
-        def picture(picture):
+    # /pictures/Berlin_I/web/p1080757_12566647374_o_opt.jpg
+    # /pictures/Berlin_I/thumb/p1080757_12566647374_o_opt.jpg
+    @app.route("/pictures/<path:picture>")
+    def picture(picture):
+        if app.config['ENV'] == 'development':
             pics_dir = Picture.pics_dir()
             pic_path = pics_dir / picture
 
@@ -49,5 +49,7 @@ def create_app(test_config=None):
                 return send_from_directory(pics_dir, picture)
             else:
                 abort(404)
+        else:
+            abort(404)
 
     return app
