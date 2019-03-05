@@ -20,7 +20,12 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    if app.config['ENV'] not in ['development', 'test']:
+        from flask_basicauth import BasicAuth
+        basic_auth = BasicAuth(app)
+
     @app.route("/")
+    # @basic_auth.required
     def index():
         css_classses = itertools.cycle(['primary', 'secondary', 'success',
                                         'danger', 'warning', 'info', 'light',
@@ -31,6 +36,7 @@ def create_app(test_config=None):
                                folders_and_classes=folders_and_classes)
 
     @app.route("/<folder>")
+    # @basic_auth.required
     def folder(folder):
         pictures = Picture.from_folder(folder)
         return_to = request.referrer or url_for('/')
