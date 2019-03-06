@@ -4,6 +4,7 @@ import itertools
 from pathlib import Path
 
 from flask import Flask, render_template, url_for, abort, send_from_directory, request
+from flask_assets import Environment, Bundle
 
 from .models import Picture
 
@@ -37,6 +38,18 @@ def create_app(test_config=None):
     if app.config['ENV'] not in ['development', 'test']:
         from flask_basicauth import BasicAuth
         basic_auth = BasicAuth(app)
+
+
+    assets = Environment()
+    js_libs = ['jquery', 'popper', 'bootstrap', 'unitegallery', 'ug-theme-tiles']
+    js_libs = [f'js/{js_lib}.js' for js_lib in js_libs]
+    js = Bundle(*js_libs, filters='jsmin', output='js/js_all.js')
+    assets.register('js_all', js)
+    css_libs = ['bootstrap', 'style', 'unite-gallery']
+    css_libs = [f'css/{css_lib}.css' for css_lib in css_libs]
+    css = Bundle(*css_libs, filters='cssmin', output='css/css_all.css')
+    assets.register('css_all', css)
+    assets.init_app(app)
 
     @app.route("/")
     # @basic_auth.required
