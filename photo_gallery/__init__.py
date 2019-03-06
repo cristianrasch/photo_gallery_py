@@ -7,6 +7,12 @@ from flask import Flask, render_template, url_for, abort, send_from_directory, r
 
 from .models import Picture
 
+# A handler for “500 Internal Server Error” will not be used when running
+# in debug mode. Instead, the interactive debugger will be shown
+def internal_server_error(error):
+    return str(error), 500
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -26,15 +32,11 @@ def create_app(test_config=None):
                                           backupCount=7)
     app.logger.setLevel(logging.ERROR)
     app.logger.addHandler(log_handler)
+    app.register_error_handler(500, internal_server_error)
 
     if app.config['ENV'] not in ['development', 'test']:
         from flask_basicauth import BasicAuth
         basic_auth = BasicAuth(app)
-
-    @app.errorhandler(500)
-    def internal_server_error(error):
-        app.logger.error(error, error.__traceback__)
-        return str(error), 500
 
     @app.route("/")
     # @basic_auth.required

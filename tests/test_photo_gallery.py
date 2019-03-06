@@ -5,6 +5,9 @@ from photo_gallery.models import Picture
 
 @pytest.fixture
 def client():
+    # the TESTING config flag is activated. What this does is disable error
+    # catching during request handling, so that you get better error reports
+    # when performing test requests against the application
     app = create_app({'TESTING': True})
     client = app.test_client()
 

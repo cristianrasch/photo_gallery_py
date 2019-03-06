@@ -8,7 +8,8 @@ dev setup instructions
 
 `pip install -r requirements.txt`
 
-2. Install the app locally so that the tests can find the app pkg
+2. Install the app locally so that the Werkzeug dev server and the test runner
+   can find the app pkg
 
 `pip install -e .`
 
