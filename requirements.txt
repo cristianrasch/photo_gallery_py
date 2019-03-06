@@ -1,8 +1,16 @@
+atomicwrites==1.3.0
+attrs==19.1.0
 Click==7.0
 Flask==1.0.2
 Flask-BasicAuth==0.2.0
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.1
+more-itertools==6.0.0
+-e git+git@www.jaylen.com.ar:photo_gallery_py.git@7ca9c5aba841b65af40eb183cd47209bcc1fd467#egg=photo_gallery
+pluggy==0.9.0
+py==1.8.0
+pytest==4.3.0
+six==1.12.0
 uWSGI==2.0.18
 Werkzeug==0.14.1
