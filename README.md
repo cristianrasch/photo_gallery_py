@@ -12,7 +12,15 @@ dev setup instructions
 
 `mkdir instance && echo "PICS_DIR = '/path/to/pictures'" > instance/config.py`
 
-3. Run the dev server (listens on localhost:5000)
+3. Install the app locally so that the tests can find the app pkg
+
+`pip install -e .`
+
+4. Run the test suite to verify everything is OK
+
+`pytest`
+
+5. Run the dev server (listens on localhost:5000)
 
 `FLASK_ENV=development FLASK_APP=photo_gallery flask run`
 
