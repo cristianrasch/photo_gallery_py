@@ -16,7 +16,6 @@ def internal_server_error(error):
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-
     app.config.from_object('settings')
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -26,6 +25,10 @@ def create_app(test_config=None):
     # ensure the instance folder exists
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
+    def pic():
+        return Picture(app.config['PICS_DIR'], app.config['PHOTO_EXTS'])
+
+
     log_dir = Path(__file__).parent.parent / 'log'
     log_dir.mkdir(exist_ok=True)
     fname = log_dir / 'photo_gallery.log'
@@ -34,6 +37,7 @@ def create_app(test_config=None):
     app.logger.setLevel(logging.ERROR)
     app.logger.addHandler(log_handler)
     app.register_error_handler(500, internal_server_error)
+
 
     if app.config['ENV'] not in ['development', 'test']:
         from flask_basicauth import BasicAuth
@@ -51,13 +55,14 @@ def create_app(test_config=None):
     assets.register('css_all', css)
     assets.init_app(app)
 
+
     @app.route("/")
     # @basic_auth.required
     def index():
         css_classses = itertools.cycle(['primary', 'secondary', 'success',
                                         'danger', 'warning', 'info', 'light',
                                         'dark'])
-        folders_and_classes = zip(Picture.folders(), css_classses)
+        folders_and_classes = zip(pic().folders(), css_classses)
 
         return render_template('index.html',
                                folders_and_classes=folders_and_classes)
@@ -65,7 +70,7 @@ def create_app(test_config=None):
     @app.route("/<folder>")
     # @basic_auth.required
     def folder(folder):
-        pictures = Picture.from_folder(folder)
+        pictures = pic().from_folder(folder)
         return_to = request.referrer or url_for('index')
         return render_template('show.html', pictures=pictures,
                                             return_to=return_to)
@@ -75,7 +80,7 @@ def create_app(test_config=None):
     @app.route("/pictures/<path:picture>")
     def picture(picture):
         if app.config['ENV'] == 'development':
-            pics_dir = Picture.pics_dir()
+            pics_dir = pic().pics_dir
             pic_path = pics_dir / picture
 
             if pic_path.exists():

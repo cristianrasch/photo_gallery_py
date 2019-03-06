@@ -1,53 +1,42 @@
 from functools import lru_cache
 from pathlib import Path
 
-from flask import current_app, url_for
+from flask import url_for
 
 class Picture:
     WEB_SUBDIR = 'web'
     THUMB_SUBDIR = 'thumb'
 
-    @classmethod
-    @lru_cache(maxsize=1)
-    def pics_dir(cls):
-        return Path(current_app.config['PICS_DIR']).expanduser()
+    def __init__(self, pics_dir='../test/fixtures', photo_exts=['jpg', 'jpeg'],
+                       path=None):
+        self.pics_dir = Path(pics_dir).expanduser().resolve()
+        self.photo_exts = photo_exts
+        self.path = path and Path(path)
 
-    @classmethod
     @lru_cache(maxsize=1)
-    def photo_exts(cls):
-        return current_app.config['PHOTO_EXTS']
-
-    @classmethod
-    @lru_cache(maxsize=1)
-    def folders(cls):
-        return sorted([f.name for f in cls.pics_dir().iterdir() if f.is_dir() and
-                                                                   f.name[0].isupper() and
-                                                                   any(ext for ext in cls.photo_exts() if (f / cls.WEB_SUBDIR).glob(f'*.{ext}')) and
-                                                                   any(ext for ext in cls.photo_exts() if (f / cls.THUMB_SUBDIR).glob(f'*.{ext}'))])
+    def folders(self):
+        return sorted([f.name for f in self.pics_dir.iterdir() if f.is_dir() and
+                                                                  f.name[0].isupper() and
+                                                                  any(ext for ext in self.photo_exts if (f / self.WEB_SUBDIR).glob(f'*.{ext}')) and
+                                                                  any(ext for ext in self.photo_exts if (f / self.THUMB_SUBDIR).glob(f'*.{ext}'))])
 
     # ~/Pictures/Personal/Berlin_I/p1080757_12566647374_o_opt.jpg =>
     #   /Berlin_I/web/p1080757_12566647374_o_opt.jpg
-    @classmethod
-    def strip_pics_dir(cls, pic_path):
-        return str(pic_path).replace(str(cls.pics_dir()), '')
+    def __strip_pics_dir(self, pic_path):
+        return str(pic_path).replace(str(self.pics_dir), '')
 
-    @classmethod
-    @lru_cache(maxsize=1)
-    def from_folder(cls, folder):
-        if folder not in cls.folders(): return []
+    @lru_cache()
+    def from_folder(self, folder):
+        if folder not in self.folders(): return []
 
         pics = []
-        pics_dir = cls.pics_dir()
-        folder_dir = pics_dir / folder / cls.WEB_SUBDIR
-        for ext in cls.photo_exts():
+        folder_dir = self.pics_dir / folder / self.WEB_SUBDIR
+        for ext in self.photo_exts:
             pics.extend(folder_dir.glob(f'*.{ext}'))
 
         pics.sort(key=lambda path: [path.stat().st_mtime, path.name])
 
-        return [cls(url_for('picture', picture=cls.strip_pics_dir(pic))) for pic in pics]
-
-    def __init__(self, path):
-        self.path = Path(path)
+        return [self.__class__(path=url_for('picture', picture=self.__strip_pics_dir(pic))) for pic in pics]
 
     def thumb_fname(self):
         return self.path.parent.with_name(self.THUMB_SUBDIR) / self.path.name
