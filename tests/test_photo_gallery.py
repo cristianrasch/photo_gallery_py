@@ -1,5 +1,8 @@
+from pathlib import Path
 import pytest
+import sys
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from photo_gallery import create_app
 from photo_gallery.models import Picture
 
@@ -8,7 +11,8 @@ def client():
     # the TESTING config flag is activated. What this does is disable error
     # catching during request handling, so that you get better error reports
     # when performing test requests against the application
-    app = create_app({'TESTING': True})
+    pics_dir = str(Path(__file__).parent / 'fixtures')
+    app = create_app({'TESTING': True, 'PICS_DIR': pics_dir})
     client = app.test_client()
 
     yield client

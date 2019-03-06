@@ -16,22 +16,17 @@ dev setup instructions
 
 `pip install -r requirements.txt`
 
-4. Install the app locally so that the Werkzeug dev server and the test runner
-   can find the app pkg
-
-`pip install -e .`
-
-5. Run the test suite to make sure everything is set up OK
+4. Run the test suite to make sure everything is set up OK
 
 `pytest`
 
-6. Configure your pictures path [OPTIONAL]
+5. Configure your pictures path [OPTIONAL]
 
 `mkdir instance && echo "PICS_DIR = '/path/to/pictures'" > instance/config.py`
 
 (defaults to /path/to/app/tests/fixtures)
 
-8. Run the dev server (listens on localhost:5000)
+6. Run the dev server (listens on localhost:5000)
 
 `FLASK_ENV=development FLASK_APP=photo_gallery flask run`
 
