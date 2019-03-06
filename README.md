@@ -8,17 +8,19 @@ dev setup instructions
 
 `pip install -r requirements.txt`
 
-2. Configure your pictures path (defaults to ~/Pictures)
-
-`mkdir instance && echo "PICS_DIR = '/path/to/pictures'" > instance/config.py`
-
-3. Install the app locally so that the tests can find the app pkg
+2. Install the app locally so that the tests can find the app pkg
 
 `pip install -e .`
 
-4. Run the test suite to verify everything is OK
+3. Run the test suite to verify everything is OK
 
 `pytest`
+
+4. Configure your pictures path [OPTIONAL]
+
+`mkdir instance && echo "PICS_DIR = '/path/to/pictures'" > instance/config.py`
+
+(defaults to /path/to/app/tests/fixtures)
 
 5. Run the dev server (listens on localhost:5000)
 
