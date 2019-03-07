@@ -18,7 +18,7 @@ dev setup instructions
 
 4. Run the test suite to make sure everything is set up OK
 
-`pytest`
+`python -m unittest discover -v -s photo_gallery/tests/`
 
 5. Configure your pictures path [OPTIONAL]
 
