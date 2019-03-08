@@ -7,7 +7,8 @@ class Picture:
     WEB_SUBDIR = 'web'
     THUMB_SUBDIR = 'thumb'
 
-    def __init__(self, pics_dir='../test/fixtures', photo_exts=['jpg', 'jpeg'],
+    def __init__(self, pics_dir=Path(__file__).with_name('tests').joinpath('fixtures'),
+                       photo_exts=['jpg', 'jpeg'],
                        path=None):
         self.pics_dir = Path(pics_dir).expanduser().resolve()
         self.photo_exts = photo_exts
