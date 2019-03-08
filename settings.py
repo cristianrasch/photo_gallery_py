@@ -1,6 +1,6 @@
 from pathlib import Path
 
-PICS_DIR = str(Path(__file__).parent / 'tests' / 'fixtures')
+PICS_DIR = str(Path(__file__).with_name('photo_gallery').joinpath('tests', 'fixtures'))
 PHOTO_EXTS = 'jpg,jpeg'.split(',')
 BASIC_AUTH_USERNAME = 'root'
 BASIC_AUTH_PASSWORD = 'changeme'
