@@ -29,7 +29,7 @@ def create_app(test_config=None):
         return Picture(app.config['PICS_DIR'], app.config['PHOTO_EXTS'])
 
 
-    log_dir = Path(__file__).parent.parent / 'log'
+    log_dir = Path(__file__).parent.with_name('log')
     log_dir.mkdir(exist_ok=True)
     fname = log_dir / 'photo_gallery.log'
     log_handler = TimedRotatingFileHandler(filename=fname, when='d',
