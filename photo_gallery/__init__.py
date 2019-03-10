@@ -2,6 +2,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import itertools
 from pathlib import Path
+import os
 
 from flask import Flask, render_template, url_for, abort, send_from_directory, request
 from flask_assets import Environment, Bundle
@@ -25,11 +26,17 @@ def create_app(test_config=None):
     # ensure the instance folder exists
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
+    app_pkg_dir = Path(__file__).parent
+    pids_dir = app_pkg_dir.with_name('tmp') / 'pids'
+    pids_dir.mkdir(parents=True, exist_ok=True)
+    pids_dir.joinpath(f'{__name__}.pid').write_text(str(os.getpid()))
+
+
     def pic():
         return Picture(app.config['PICS_DIR'], app.config['PHOTO_EXTS'])
 
 
-    log_dir = Path(__file__).parent.with_name('log')
+    log_dir = app_pkg_dir.with_name('log')
     log_dir.mkdir(exist_ok=True)
     fname = log_dir / 'photo_gallery.log'
     log_handler = TimedRotatingFileHandler(filename=fname, when='d',
