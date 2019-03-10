@@ -4,8 +4,9 @@
   <div class="row">
     <div class="col-6 offset-3">
       <div class="list-group text-center">
-        {% for folder, css_class in folders_and_classes %}
-          <a href="{{ url_for('folder', folder=folder) }}" class="list-group-item list-group-item-action list-group-item-{{ css_class }} folder">
+        {% for folder in folders %}
+          <a href="{{ url_for('folder', folder=folder) }}"
+             class="list-group-item list-group-item-action list-group-item-{{ loop.cycle('primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark') }} folder">
             {{ folder }}
           </a>
         {% endfor %}

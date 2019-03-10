@@ -59,13 +59,7 @@ def create_app(test_config=None):
     @app.route("/")
     # @basic_auth.required
     def index():
-        css_classses = itertools.cycle(['primary', 'secondary', 'success',
-                                        'danger', 'warning', 'info', 'light',
-                                        'dark'])
-        folders_and_classes = zip(pic().folders(), css_classses)
-
-        return render_template('index.html',
-                               folders_and_classes=folders_and_classes)
+        return render_template('index.html', folders=pic().folders())
 
     @app.route("/<folder>")
     # @basic_auth.required
