@@ -23,7 +23,7 @@ class Picture:
 
     # ~/Pictures/Personal/Berlin_I/p1080757_12566647374_o_opt.jpg =>
     #   /Berlin_I/web/p1080757_12566647374_o_opt.jpg
-    def __strip_pics_dir(self, pic_path):
+    def _strip_pics_dir(self, pic_path):
         return str(pic_path).replace(str(self.pics_dir), '')
 
     @lru_cache()
@@ -37,7 +37,7 @@ class Picture:
 
         pics.sort(key=lambda path: [path.stat().st_mtime, path.name])
 
-        return [self.__class__(path=url_for('picture', picture=self.__strip_pics_dir(pic))) for pic in pics]
+        return [self.__class__(path=url_for('picture', picture=self._strip_pics_dir(pic))) for pic in pics]
 
     def thumb_fname(self):
         return self.path.parent.with_name(self.THUMB_SUBDIR) / self.path.name

@@ -26,7 +26,7 @@ class ModelsTest(unittest.TestCase):
         pic_urls = [str(pic.path) for pic in pictures]
         pics_dir = self.picture.pics_dir
         web_subdir = self.picture.WEB_SUBDIR
-        pic_paths = [f'/pictures{self.picture._Picture__strip_pics_dir(path)}' for path in pics_dir.joinpath(folder, web_subdir).glob('*.jpg')]
+        pic_paths = [f'/pictures{self.picture._strip_pics_dir(path)}' for path in pics_dir.joinpath(folder, web_subdir).glob('*.jpg')]
         # TODO: figure out why URLs gen by url_for start with http:/ instead of
         # http://
         url_prefix = f'http:/{srv_name}'
